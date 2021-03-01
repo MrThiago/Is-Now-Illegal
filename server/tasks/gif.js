@@ -34,6 +34,9 @@ module.exports = (data, progress, resolve, reject) => {
   // Get db reference
   let gifRef = gifsRef.child(gifWord)
 
+  // Number of Views to be set on creation
+  let dbObject = {}
+
   // Generate gif
   async.series([
 
@@ -42,7 +45,10 @@ module.exports = (data, progress, resolve, reject) => {
       console.log(`[${gifWord}] Verify cache`)
 
       gifRef.once('value', (snapshot) => {
-        if (snapshot.val() && snapshot.val().url) {
+        // Store in variable
+        dbObject = snapshot.val() || dbObject
+
+        if (dbObject && dbObject.url) {
           gifRef.child('views').transaction(function (current_value) {
             return (current_value || 0) + 1;
           });
@@ -79,8 +85,8 @@ module.exports = (data, progress, resolve, reject) => {
 
       gifRef.set({
         url: 'https://storage.googleapis.com/is-now-illegal.appspot.com/gifs/'+fileName,
-        views: 1,
-        created: new Date(),
+        views: dbObject.views || 1,
+        created: dbObject.created || new Date(),
         processTime: Date.now() - startTime
       }, next)
     },

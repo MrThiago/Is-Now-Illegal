@@ -16,9 +16,8 @@ const basename = window.location.hostname.indexOf('github') >= 0 &&
   ? `/${window.location.pathname.split('/')[1]}`
   : undefined;
 
-const ProductHuntHeader = styled.header`
-  background-color: #da552f;
-  padding: ${padding}px;
+const DonationHeader = styled.header`
+  padding: ${2 * padding}px ${padding}px;
   text-align: center;
 
   p {
@@ -27,7 +26,7 @@ const ProductHuntHeader = styled.header`
 `;
 
 const MessageHeader = styled.header`
-  padding: ${padding}px;
+  padding: ${2 * padding}px ${padding}px;
   text-align: center;
 
   p {
@@ -35,20 +34,8 @@ const MessageHeader = styled.header`
   }
 `;
 
-const hideProductHuntHeader = localStorage.hideProductHuntHeader;
-
 export default class extends Component {
   state = { backgroundColor: colors.blue, message: '' };
-
-  componentDidMount = () => {
-    // never show product hunt header again after it being visible of 10s
-    setTimeout(
-      () => {
-        localStorage.hideProductHuntHeader = true;
-      },
-      10000,
-    );
-  };
 
   setMessage = message => {
     this.setState({ message });
@@ -68,29 +55,16 @@ export default class extends Component {
     return (
       <Router basename={basename}>
         <PageContainer background={backgroundColor}>
-          {
-            !localStorage.fromProductHunt &&
-              !hideProductHuntHeader &&
-              (
-                <ProductHuntHeader>
-                  <img
-                    src={
-                      `${process.env.PUBLIC_URL}/img/producthunt-kitty-logo.png`
-                    }
-                    alt="Product Hunt Logo"
-                    height="40"
-                  />
-                  <p>
-                    <Link
-                      href="https://www.producthunt.com/posts/is-now-illegal"
-                      target="_blank"
-                    >
-                      We are on Product Hunt, check it out!
-                    </Link>
-                  </p>
-                </ProductHuntHeader>
-              )
-          }
+          <DonationHeader>
+            <p>
+              <Link
+                href="https://www.patreon.com/isnowillegal"
+                target="_blank"
+              >
+                <span>⚠️ Click here to help keep this site alive. 💰🔥</span>
+              </Link>
+            </p>
+          </DonationHeader>
           <MessageHeader>
             {message && <p>{message}</p>}
           </MessageHeader>
